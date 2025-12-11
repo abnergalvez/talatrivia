@@ -121,6 +121,7 @@ $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\AuthMiddleware::class,
+    'role' => App\Http\Middleware\RoleMiddleware::class,
 ]);
 
 return $app;

@@ -10,11 +10,17 @@ class ShowUserAction
 {
     public function execute()
     {
-        $user = auth()->user();
+        $user = app('user');
+        
+        if (!$user) {
+            throw new BusinessRuleException("User not authenticated.", 401);
+        }
+
         if (!$user->isAdmin()) {
             throw new BusinessRuleException("Only admin users can perform this action.");
         }
-        $userlist = User::all();
+        $userlist = User::with('role')->get();
+        
         return response()->json($userlist);
     }
 }

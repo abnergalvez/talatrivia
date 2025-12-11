@@ -17,32 +17,25 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->validate($request, [
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
         ]);
 
-        // Buscar rol player
-        $playerRole = Role::where('code', 'player')->first();
-
-        if (!$playerRole) {
-            return response()->json([
-                'error' => 'Role player not found. Run seeder.'
-            ], 500);
-        }
+        // Por defecto, los nuevos usuarios son players
+        $playerRole = \App\Models\Role::where('name', 'player')->first();
 
         $user = User::create([
-            'name'      => $request->name,
-            'email'     => $request->email,
-            'password'  => Hash::make($request->password),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
             'api_token' => Str::random(60),
-            'role_id'   => $playerRole->id,
+            'role_id' => $playerRole->id
         ]);
 
         return response()->json([
-            'message' => 'User registered as player',
-            'token'   => $user->api_token,
-            'user'    => $user
+            'user' => $user,
+            'token' => $user->api_token
         ], 201);
     }
 
@@ -52,41 +45,49 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $this->validate($request, [
-            'email'    => 'required|email',
-            'password' => 'required',
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'error' => 'Invalid credentials'
-            ], 401);
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
+        // Generar nuevo token en cada login
         $user->api_token = Str::random(60);
         $user->save();
 
         return response()->json([
-            'message' => 'Login successful',
-            'token'   => $user->api_token,
-            'user'    => $user,
-            'role'    => $user->role->code,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role->name
+            ],
+            'token' => $user->api_token
         ]);
     }
 
-    /**
-     * Logout
-     */
+
     public function logout(Request $request)
     {
         $user = app('user');
-
         $user->api_token = null;
         $user->save();
 
+        return response()->json(['message' => 'Logged out successfully']);
+    }
+
+    public function me(Request $request)
+    {
+        $user = app('user');
         return response()->json([
-            'message' => 'Logged out successfully'
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->role->name
         ]);
     }
 }
