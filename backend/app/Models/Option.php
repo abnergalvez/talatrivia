@@ -6,5 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Option extends Model
 {
-    //
+    protected $table = 'options';
+    
+    protected $fillable = [
+        'question_id',
+        'text',
+        'is_correct',
+    ];
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
 }

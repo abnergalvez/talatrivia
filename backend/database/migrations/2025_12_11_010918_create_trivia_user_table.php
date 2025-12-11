@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('trivia_id')->constrained('trivias')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->integer('score')->default(0);
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }

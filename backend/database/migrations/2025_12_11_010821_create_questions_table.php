@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('trivia_id')->constrained('trivias')->onDelete('cascade');
             $table->foreignId('level_id')->constrained('levels');
-            $table->text('question');
+            $table->text('description');
             $table->integer('time')->nullable();
             $table->timestamps();
         });

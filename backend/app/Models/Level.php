@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
+    protected $table = 'levels';
+
     protected $fillable = [
         'name', 'points',
     ];
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
 }
