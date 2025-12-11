@@ -60,6 +60,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('database');
 
 /*
 |--------------------------------------------------------------------------
@@ -115,6 +116,7 @@ $app->router->group([
 
 $app->withFacades();
 $app->withEloquent();
+
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
 $app->routeMiddleware([

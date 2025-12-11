@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserUpdateRequest;
 use App\Actions\User\UpdateUserAction;
+use App\Actions\User\ShowUserAction;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(ShowUserAction $action)
     {
-        //
+        return $action->execute();
     }
 
     public function create()
