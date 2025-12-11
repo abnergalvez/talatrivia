@@ -10,23 +10,12 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-
-            // Datos básicos
-            $table->string('name');
-            $table->string('email')->unique();
-
-            // Autenticación por contraseña
-            $table->string('password');
-
-            // Token de API tipo "personal token"
+            $table->string('name', 255);
+            $table->string('email', 255)->unique();
+            $table->string('password', 255);
             $table->string('api_token', 80)->unique()->nullable();
-
-            // Opcional: si quieres asignar un rol directo
             $table->foreignId('role_id')->nullable()->constrained('roles')->nullOnDelete();
-
-            // Para login tipo "remember me" (opcional pero recomendado)
             $table->rememberToken();
-
             $table->timestamps();
         });
     }

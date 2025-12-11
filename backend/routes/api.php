@@ -17,7 +17,13 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
         // Solo solo "admin"
         $router->group(['middleware' => 'role:admin'], function () use ($router) {
+            // Rutas CRUD para administración de usuarios
             $router->get('users', 'UserController@index');
+            $router->post('users', 'UserController@store');
+            $router->get('users/{id}', 'UserController@show');
+            $router->put('users/{id}', 'UserController@update');
+            $router->delete('users/{id}', 'UserController@destroy');
+            
 
             // Rutas CRUD para administración de trivias
             $router->get('trivias', 'TriviaController@index');
@@ -68,7 +74,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('trivias/{id}/get_full', 'TriviaController@getFullTrivia'); // trivia + preguntas + opciones
         
         // Responder todas las preguntas de una trivia
-        $router->post('trivias/{id}/answer_all', 'TriviaController@answerAllQuestions');
+        $router->post('trivias/{id}/answer_all', 'TriviaController@answerAllQuestions'); // trivia + preguntas + opcion c/u (respuestas)
 
         // Responder solo una pregunta
         $router->post('questions/{id}/answer', 'QuestionController@answerQuestion');

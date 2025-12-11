@@ -118,6 +118,7 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(\Anik\Form\FormRequestServiceProvider::class);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\AuthMiddleware::class,

@@ -4,35 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
+//Requests
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\UserStoreRequest;
+
+//Actions
 use App\Actions\User\UpdateUserAction;
 use App\Actions\User\ShowUserAction;
+use App\Actions\User\ListUsersAction;
+use App\Actions\User\StoreUserAction;
+use App\Actions\User\DeleteUserAction;
 
 class UserController extends Controller
 {
-    public function index(ShowUserAction $action)
+    public function index(ListUsersAction $action)
     {
         return $action->execute();
     }
 
-    public function create()
+
+    public function store(UserStoreRequest $request, StoreUserAction $action)
     {
-        //
+        return $action->execute($request->validated());
     }
 
-    public function store(Request $request)
+    public function show($id, ShowUserAction $action)
     {
-        //
-    }
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
+        return $action->execute($id);
     }
 
     public function update(UserUpdateRequest $request, $id, UpdateUserAction $action)
@@ -40,8 +39,8 @@ class UserController extends Controller
         return $action->execute($id, $request->validated());
     }
 
-    public function destroy($id)
+    public function destroy($id, DeleteUserAction $action)
     {
-        //
+        return $action->execute($id);
     }
 }

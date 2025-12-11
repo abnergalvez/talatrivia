@@ -6,24 +6,21 @@ use App\Models\User;
 use App\Exceptions\BusinessRuleException;
 use App\Exceptions\DomainException;
 
-class ShowUserAction
+class ListUsersAction
 {
-    public function execute($id)
+    public function execute()
     {
-        $userAuth = app('user');
-        $user = User::find($id);
+        $user = app('user');
         
-        if (!$userAuth) {
+        if (!$user) {
             throw new BusinessRuleException("User not authenticated.", 401);
         }
 
-        if (!$userAuth->isAdmin()) {
+        if (!$user->isAdmin()) {
             throw new BusinessRuleException("Only admin users can perform this action.");
         }
-        if (!$user) {
-            throw new DomainException("User not found.", 404);
-        }
+        $userlist = User::with('role')->get();
         
-        return response()->json($user);
+        return response()->json($userlist);
     }
 }
