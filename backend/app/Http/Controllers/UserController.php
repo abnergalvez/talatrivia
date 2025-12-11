@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UserUpdateRequest;
+use App\Actions\User\UpdateUserAction;
 
 class UserController extends Controller
 {
@@ -66,9 +69,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id, UpdateUserAction $action)
     {
-        //
+        return $action->execute($id, $request->validated());
     }
 
     /**
