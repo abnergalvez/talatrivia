@@ -4,82 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Question;
 use Illuminate\Http\Request;
+use App\Http\Requests\QuestionStoreRequest;
+use App\Http\Requests\QuestionUpdateRequest;
+use App\Http\Requests\BulkQuestionStoreRequest;
+use App\Actions\Question\StoreBulkQuestionsAction;
+use App\Actions\Question\ListQuestionsAction;
+use App\Actions\Question\ShowQuestionAction;
+use App\Actions\Question\StoreQuestionAction;
+use App\Actions\Question\UpdateQuestionAction;
+use App\Actions\Question\DeleteQuestionAction;
 
 class QuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index($triviaId, ListQuestionsAction $action)
     {
-        //
+        return $action->execute($triviaId);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show($id, ShowQuestionAction $action)
     {
-        //
+        return $action->execute($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(QuestionStoreRequest $request, $triviaId, StoreQuestionAction $action)
     {
-        //
+        return $action->execute($triviaId, $request->validated());
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Question $question)
+    public function update(QuestionUpdateRequest $request, $id, UpdateQuestionAction $action)
     {
-        //
+        return $action->execute($id, $request->validated());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Question $question)
+    public function destroy($id, DeleteQuestionAction $action)
     {
-        //
+        return $action->execute($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Question $question)
+    public function bulkStore(BulkQuestionStoreRequest $request, $triviaId, StoreBulkQuestionsAction $action) 
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Question  $question
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Question $question)
-    {
-        //
+        return  $action->execute($triviaId, $request->validated());
     }
 }

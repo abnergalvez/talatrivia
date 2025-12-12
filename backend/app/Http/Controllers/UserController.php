@@ -15,6 +15,8 @@ use App\Actions\User\ShowUserAction;
 use App\Actions\User\ListUsersAction;
 use App\Actions\User\StoreUserAction;
 use App\Actions\User\DeleteUserAction;
+use App\Actions\User\AssignedTriviasAction;
+
 
 class UserController extends Controller
 {
@@ -22,7 +24,6 @@ class UserController extends Controller
     {
         return $action->execute();
     }
-
 
     public function store(UserStoreRequest $request, StoreUserAction $action)
     {
@@ -43,4 +44,10 @@ class UserController extends Controller
     {
         return $action->execute($id);
     }
+
+    public function assignedTrivias(AssignedTriviasAction $action)
+    {
+        return $action->execute();
+    }
+    
 }

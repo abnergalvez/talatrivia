@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('levels', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // fácil, medio, difícil
+            $table->string('name', 100)->unique(); // fácil, medio, difícil
             $table->integer('points'); // 1, 2, 3
             $table->timestamps();
         });

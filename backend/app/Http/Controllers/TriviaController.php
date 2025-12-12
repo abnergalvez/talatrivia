@@ -4,82 +4,59 @@ namespace App\Http\Controllers;
 
 use App\Models\Trivia;
 use Illuminate\Http\Request;
+use App\Http\Requests\TriviaStoreRequest;
+use App\Http\Requests\TriviaUpdateRequest;
+use App\Http\Requests\TriviaAssignRequest;
+use App\Http\Requests\TriviaUnassignRequest;
+
+use App\Actions\Trivia\ListTriviaAction;
+use App\Actions\Trivia\ShowTriviaAction;
+use App\Actions\Trivia\StoreTriviaAction;
+use App\Actions\Trivia\UpdateTriviaAction;
+use App\Actions\Trivia\DeleteTriviaAction;
+use App\Actions\Trivia\TriviaUsersAction;
+use App\Actions\Trivia\AssignTriviaToUsersAction;
+use App\Actions\Trivia\UnassignTriviaFromUsersAction;
 
 class TriviaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+   public function index(ListTriviaAction $action)
     {
-        //
+        return $action->execute();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show($id, ShowTriviaAction $action)
     {
-        //
+        return $action->execute($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(TriviaStoreRequest $request, StoreTriviaAction $action)
     {
-        //
+        return $action->execute($request->validated());
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Trivia  $trivia
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Trivia $trivia)
+    public function update(TriviaUpdateRequest $request, $id, UpdateTriviaAction $action)
     {
-        //
+        return $action->execute($id, $request->validated());
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Trivia  $trivia
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Trivia $trivia)
+    public function destroy($id, DeleteTriviaAction $action)
     {
-        //
+        return $action->execute($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Trivia  $trivia
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Trivia $trivia)
+    public function triviaUsers($id, TriviaUsersAction $action)
     {
-        //
+        return $action->execute($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Trivia  $trivia
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Trivia $trivia)
+    public function assignToUsers(TriviaAssignRequest $request, $id, AssignTriviaToUsersAction $action)
     {
-        //
+        return $action->execute($id, $request->validated());
+    }
+
+    public function unassignFromUsers(TriviaUnassignRequest $request, $id, UnassignTriviaFromUsersAction $action)
+    {
+        return $action->execute($id, $request->validated());
     }
 }

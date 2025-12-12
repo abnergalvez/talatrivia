@@ -17,6 +17,11 @@ class Trivia extends Model
         'time'
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+        'time' => 'integer'
+    ];
+
     public function questions()
     {
         return $this->hasMany(Question::class);
@@ -33,6 +38,5 @@ class Trivia extends Model
                     ->withPivot('score', 'completed_at')
                     ->withTimestamps();
     }
-
 
 }
