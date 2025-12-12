@@ -119,6 +119,7 @@ $app->withEloquent();
 
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(\Anik\Form\FormRequestServiceProvider::class);
+$app->register(\Laravel\Lumen\Console\ConsoleServiceProvider::class);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\AuthMiddleware::class,

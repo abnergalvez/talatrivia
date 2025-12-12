@@ -10,10 +10,6 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    /**
-     * Registro de usuario (público)
-     * Siempre queda con rol "player"
-     */
     public function register(Request $request)
     {
         $this->validate($request, [
@@ -40,9 +36,6 @@ class AuthController extends Controller
         ], 201);
     }
 
-    /**
-     * Login
-     */
     public function login(Request $request)
     {
         $this->validate($request, [
