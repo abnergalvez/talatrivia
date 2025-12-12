@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+
     public function register(Request $request)
     {
         $this->validate($request, [
@@ -28,10 +29,15 @@ class AuthController extends Controller
             'api_token' => Str::random(60),
             'role_id' => $playerRole->id
         ]);
-
+        $user->load('role');
         return response()->json([
             'message' => 'You have successfully registered.',
-            'user' => $user,
+            'user' => [ // <-- Devolver un objeto 'user' limpio con el rol
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role->name 
+            ],
             'token' => $user->api_token
         ], 201);
     }
