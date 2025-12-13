@@ -34,3 +34,8 @@ Thumbs.db
 docker-compose.override.yml
 docker/
 *.pid
+
+storage/database/
+storage/database/*
+*.sqlite
+*.sqlite-journal
