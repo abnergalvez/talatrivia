@@ -6,16 +6,25 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link class="nav-link" to="/">Jugar Trivia</router-link>
+            <router-link class="nav-link fw-bold" to="/">Jugar Trivia</router-link>
+          </li>
+          <li class="nav-item" v-if="authStore.isAuthenticated">
+            <router-link class="nav-link fw-bold" to="/ranking">Ranking General</router-link>
           </li>
 
-          <li class="nav-item" v-if="authStore.isAdmin">
-            <router-link class="nav-link text-warning" to="/admin/trivias">Gestionar Trivias</router-link>
+          <li class="nav-item" v-if="authStore.isAdmin" title="Gestión de Trivias">
+            <router-link class="nav-link text-warning fw-bold" to="/admin/trivias"> Trivias</router-link>
           </li>
-          <li class="nav-item" v-if="authStore.isAdmin">
-            <router-link class="nav-link text-warning" to="/admin/users">Gestionar Usuarios</router-link>
+          <li class="nav-item" v-if="authStore.isAdmin" title="Gestión de Usuarios">
+            <router-link class="nav-link text-warning fw-bold" to="/admin/users"> Usuarios</router-link>
           </li>
-        </ul>
+          <li class="nav-item" v-if="authStore.isAdmin" title="Gestión de Roles">
+            <router-link class="nav-link text-warning fw-bold" to="/admin/roles"> Roles</router-link>
+          </li>
+          <li class="nav-item" v-if="authStore.isAdmin" title="Gestión de Niveles">
+            <router-link class="nav-link text-warning  fw-bold" to="/admin/levels"> Niveles</router-link>
+          </li>
+          </ul>
 
         <div class="d-flex">
           <template v-if="!authStore.isAuthenticated">

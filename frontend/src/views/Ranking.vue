@@ -1,7 +1,7 @@
 <template>
   <div class="container py-4">
     
-    <h2 class="mb-4 text-primary">🏆 Ranking General de Jugadores</h2>
+    <h3 class="mb-4 text-dark fw-bold">🏆 Ranking General de Jugadores</h3>
     <p class="text-muted">Puntuación total acumulada de todas las trivias completadas.</p>
     
     <div v-if="generalRankingData" class="alert alert-info shadow-sm p-3 mb-4">

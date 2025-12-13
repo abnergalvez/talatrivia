@@ -26,15 +26,15 @@
 
           <div class="card-body">
             <p class="card-text text-muted mb-3">{{ trivia.description }}</p>
-            <p class="mb-2">**Preguntas:** {{ trivia.questions_count }}</p>
+            <p class="mb-2 fw-bold">Total de Preguntas: {{ trivia.questions_count }}</p>
 
             <div v-if="trivia.status === 'completed'" class="p-2 border border-success rounded bg-light">
               <span class="badge bg-success me-2">Completada</span>
-              <p class="mt-2 mb-0">
-                **Puntuación:** <strong class="text-success">{{ trivia.score ?? 'N/A' }}</strong>
+              <p class="mt-2 mb-0 ">
+                Puntuación: <strong class="text-success">{{ trivia.score ?? 'N/A' }}</strong>
               </p>
               <p class="mb-1 small">
-                **Finalizada:** {{ formatCompletionDate(trivia.completed_at) }}
+                Finalizada: {{ formatCompletionDate(trivia.completed_at) }}
               </p>
             </div>
 
@@ -86,7 +86,7 @@
                           <div v-else-if="getRankingState(trivia.id).data">
                               
                               <p class="mb-2 small">
-                                  **Tu mejor resultado:** <strong :class="['badge', getRankingState(trivia.id).data.your_position === 1 ? 'bg-warning text-dark' : 'bg-info']">
+                                  <strong>Tu mejor resultado:</strong> <strong :class="['badge', getRankingState(trivia.id).data.your_position === 1 ? 'bg-warning text-dark' : 'bg-info']">
                                       #{{ getRankingState(trivia.id).data.your_position || 'N/A' }}
                                   </strong>
                                   | Puntuación: 
