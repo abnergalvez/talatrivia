@@ -131,8 +131,8 @@ The TalaTrivia API uses the following base URL:
 
 - **Base URL:** `http://localhost:8082/api/` (or your environment-specific URL)
 - **Authentication:** Most protected routes require a **Bearer Token**
+- See the TalaTriviaAPI.json file (Postman collection) in the project root directory so you can import it into Postman.
 
-See the TalaTriviaAPI.json file (Postman collection) in the project root directory so you can import it into Postman.
 ---
 
 ### 🔐 Authentication
