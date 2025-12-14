@@ -26,13 +26,7 @@
 
             <div class="alert alert-info mt-4">
                 <p class="mb-1">**Total de Preguntas:** {{ trivia.questions.length }}</p>
-                <!--<p v-if="trivia.time_option === 'fixed'" class="mb-0">
-                    **Tiempo Límite:** <span class="badge bg-danger">{{ trivia.time }} minutos</span> para toda la trivia.
-                </p>
-                <p v-else class="mb-0">
-                    **Tiempo por Pregunta:** Cada pregunta tiene su propio temporizador.
-                </p>-->
-            </div>
+                </div>
 
             <button @click="startGame" class="btn btn-lg btn-success mt-4 d-block w-100">
                 <i class="bi bi-play-fill me-2"></i> ¡Comenzar Trivia Ahora!
@@ -41,38 +35,13 @@
 
         <div v-else-if="isGameStarted && !isGameFinished">
             
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="badge bg-secondary fs-6">
-                    Pregunta {{ currentQuestionIndex + 1 }} / {{ trivia.questions.length }}
-                </span>
-                
-                <!--<span v-if="trivia.time_option !== 'none'" class="badge bg-danger fs-5">
-                    <i class="bi bi-clock-fill me-1"></i> Tiempo Restante: {{ formatTime(remainingTime) }}
-                </span>-->
-            </div>
-
-            <div class="card p-4 mb-4 border-info">
-                <h5 class="mb-4">
-                    {{ currentQuestion.description }}
-                </h5>
-                
-                <small class="mb-4">
-                  <strong>Debes seleccionar solo una opción para esta pregunta:</strong>
-                </small>
-                
-                <div class="list-group">
-                    <button 
-                        v-for="option in currentQuestion.options" 
-                        :key="option.id" 
-                        @click="selectOption(currentQuestion.id, option.id)"
-                        :class="['list-group-item', 'list-group-item-action', 'my-2', 
-                                 { 'active bg-primary text-white': userAnswers[currentQuestion.id] === option.id }]"
-                        type="button"
-                    >
-                        {{ option.text }}
-                    </button>
-                </div>
-            </div>
+            <QuestionDisplay
+              :question="currentQuestion"
+              :questionIndex="currentQuestionIndex"
+              :totalQuestions="trivia.questions.length"
+              :selectedOptionId="userAnswers[currentQuestion.id]"
+              @select="selectOption"
+            />
 
             <div class="d-flex justify-content-between mt-4">
                 
@@ -134,11 +103,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, onUnmounted } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import http from '@/http'; // Asumimos que http es tu wrapper de Axios
+import http from '@/http';
+import QuestionDisplay from '@/components/QuestionDisplay.vue';
 
-// --- ESTADOS DE LA VISTA ---
 const route = useRoute();
 const router = useRouter();
 
@@ -146,17 +115,15 @@ const trivia = ref(null);
 const isLoading = ref(true);
 const error = ref(null);
 
-// --- ESTADOS DEL JUEGO ---
 const isGameStarted = ref(false);
 const isGameFinished = ref(false);
 const isSubmitting = ref(false);
 const currentQuestionIndex = ref(0);
-const userAnswers = ref({}); // { question_id: option_id }
-const remainingTime = ref(0); // Mantenemos el temporizador, pero la lógica de intervalo está en comentario
+const userAnswers = ref({});
+const remainingTime = ref(0);
 let globalTimerInterval = null;
-const finalResults = ref({}); // Para guardar la respuesta del endpoint answer_all
+const finalResults = ref({});
 
-// --- COMPUTED PROPERTIES ---
 const currentQuestion = computed(() => {
     if (trivia.value && trivia.value.questions.length > 0) {
         return trivia.value.questions[currentQuestionIndex.value];
@@ -164,23 +131,16 @@ const currentQuestion = computed(() => {
     return null;
 });
 
-// --- WATCHERS ---
-// Deshabilitamos el watcher del tiempo por ahora, como solicitaste.
-
-// --- FUNCIONES DE TIEMPO (Dejamos el formato por si se vuelve a usar) ---
 const formatTime = (totalSeconds) => {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 };
 
-// --- LÓGICA DEL JUEGO ---
-
 const startGame = () => {
     isGameStarted.value = true;
     currentQuestionIndex.value = 0;
     userAnswers.value = {};
-    // La función startGlobalTimer() está comentada/desactivada, como solicitaste.
 };
 
 const selectOption = (questionId, optionId) => {
@@ -194,19 +154,14 @@ const submitTrivia = async () => {
     if (isGameFinished.value || isSubmitting.value) return; 
     
     isSubmitting.value = true;
-    // Si el temporizador estuviera activo, se detendría aquí
-    // clearInterval(globalTimerInterval); 
     
-    // 1. CONSTRUIR EL PAYLOAD EN EL FORMATO REQUERIDO: { answers: [{ question_id, option_id }, ...] }
     const answersPayload = {
         answers: Object.entries(userAnswers.value).map(([question_id, option_id]) => ({
-            // Aseguramos que question_id es un número, ya que se usa como clave de string en userAnswers
             question_id: parseInt(question_id), 
             option_id: option_id
         }))
     };
     
-    // 2. VERIFICAR QUE EL USUARIO HAYA RESPONDIDO AL MENOS UNA PREGUNTA (O TODAS si es requisito)
     if (answersPayload.answers.length === 0) {
         alert("Debes responder al menos una pregunta antes de enviar la trivia.");
         isSubmitting.value = false;
@@ -214,14 +169,11 @@ const submitTrivia = async () => {
     }
 
     try {
-        // 3. LLAMADA AL ENDPOINT: /api/trivias/{id_trivia}/answer_all
         const response = await http.post(`/trivias/${trivia.value.id}/answer_all`, answersPayload);
 
-        // 4. Éxito: Guardar los resultados y marcar como finalizado
         if (response.data.result) {
             finalResults.value = response.data.result;
         } else {
-             // En caso de que el API responda 200 pero sin el campo 'result'
             finalResults.value = {
                 total_points_earned: 'N/A',
                 correct_answers: 'N/A',
@@ -244,54 +196,52 @@ const submitTrivia = async () => {
     }
 };
 
-// --- FUNCIÓN DE CARGA INICIAL (SIN CAMBIOS) ---
 const fetchTriviaData = async () => {
-  const triviaId = route.params.id;
-  isLoading.value = true;
-  error.value = null;
+    const triviaId = route.params.id;
+    isLoading.value = true;
+    error.value = null;
 
-  if (!triviaId) {
-    error.value = 'ID de Trivia no encontrado en la URL.';
-    isLoading.value = false;
-    return;
-  }
+    if (!triviaId) {
+        error.value = 'ID de Trivia no encontrado en la URL.';
+        isLoading.value = false;
+        return;
+    }
 
-  try {
-    const response = await http.get(`/trivias/${triviaId}/get_full`);
-    
-    if (response.data && response.data.trivia) {
-        trivia.value = {
-            ...response.data.trivia, 
-            questions: response.data.questions || [],
-            total_questions: response.data.total_questions,
-            answered_questions: response.data.answered_questions,
-            remaining_questions: response.data.remaining_questions,
-        };
+    try {
+        const response = await http.get(`/trivias/${triviaId}/get_full`);
         
-        if (trivia.value.answered_questions > 0 && trivia.value.answered_questions === trivia.value.total_questions) {
-             isGameFinished.value = true;
-             error.value = "Esta trivia ya fue completada por ti."
+        if (response.data && response.data.trivia) {
+            trivia.value = {
+                ...response.data.trivia, 
+                questions: response.data.questions || [],
+                total_questions: response.data.total_questions,
+                answered_questions: response.data.answered_questions,
+                remaining_questions: response.data.remaining_questions,
+            };
+            
+            if (trivia.value.answered_questions > 0 && trivia.value.answered_questions === trivia.value.total_questions) {
+                 isGameFinished.value = true;
+                 error.value = "Esta trivia ya fue completada por ti."
+            }
+        } else {
+            throw new Error('La respuesta del servidor no contiene datos de trivia válidos.');
         }
-    } else {
-        throw new Error('La respuesta del servidor no contiene datos de trivia válidos.');
-    }
 
-  } catch (err) {
-    if (err.response && (err.response.status === 404 || err.response.status === 403 || err.response.status === 401)) {
-        error.value = 'No se pudo cargar la trivia. Verifica que esté asignada a tu usuario y se encuentre activa.';
-    } else {
-        error.value = `Error de red o servidor: ${err.message}`;
-    }
-    console.error("Error al cargar trivia:", err);
+    } catch (err) {
+        if (err.response && (err.response.status === 404 || err.response.status === 403 || err.response.status === 401)) {
+            error.value = 'No se pudo cargar la trivia. Verifica que esté asignada a tu usuario y se encuentre activa.';
+        } else {
+            error.value = `Error de red o servidor: ${err.message}`;
+        }
+        console.error("Error al cargar trivia:", err);
 
-  } finally {
-    isLoading.value = false;
-  }
+    } finally {
+        isLoading.value = false;
+    }
 };
 
-// --- LIFECYCLE HOOKS ---
 onMounted(() => {
-  fetchTriviaData();
+    fetchTriviaData();
 });
 
 onUnmounted(() => {
@@ -302,9 +252,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Estilos del componente */
 .active.bg-primary {
-    /* Asegurar que las opciones seleccionadas se vean bien */
     border-color: #0d6efd !important;
 }
 </style>

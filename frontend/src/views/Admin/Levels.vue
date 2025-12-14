@@ -16,91 +16,26 @@
       <p class="mt-2 text-muted">Cargando niveles...</p>
     </div>
 
-    <div v-else-if="items.length" class="card shadow-sm">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover mb-0">
-            <thead class="table-dark">
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Puntos Asociados</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in items" :key="item.id">
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.points }}</td>
-                <td>
-                  <button @click="openEditModal(item)" class="btn btn-sm btn-primary me-2">
-                    <i class="bi bi-pencil-fill"></i>
-                  </button>
-                  <button 
-                    @click="deleteItem(item.id, item.name)" 
-                    class="btn btn-sm btn-danger" 
-                    :disabled="isDeleting[item.id]"
-                  >
-                    <span v-if="isDeleting[item.id]" class="spinner-border spinner-border-sm"></span>
-                    <i v-else class="bi bi-trash-fill"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <LevelTable
+      v-else-if="items.length"
+      :items="items"
+      :isDeleting="isDeleting"
+      @edit="openEditModal"
+      @delete="deleteItem"
+    />
 
     <div v-else-if="!isLoading" class="alert alert-info text-center">
       No hay niveles registrados.
     </div>
 
-    <div v-if="isModalOpen" class="modal d-block modal-open" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ currentItem.id ? 'Editar Nivel' : 'Crear Nivel' }}</h5>
-            <button type="button" class="btn-close" @click="closeModal"></button>
-          </div>
-          <form @submit.prevent="saveItem" autocomplete="off">
-            <div class="modal-body">
-
-              <div v-if="Object.keys(validationErrors).length" class="alert alert-warning">
-                <ul class="mb-0">
-                  <li v-for="(errors, field) in validationErrors" :key="field">
-                    <span class="fw-bold text-capitalize">{{ field.replace('_', ' ') }}:</span>
-                    <ul class="ms-3 my-1">
-                      <li v-for="errorMsg in errors" :key="errorMsg">{{ errorMsg }}</li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="mb-3">
-                <label for="name" class="form-label">Nombre del Nivel (ej: Básico, Avanzado)</label>
-                <input type="text" class="form-control" id="name" v-model="currentItem.name" required autocomplete="off">
-              </div>
-
-              <div class="mb-3">
-                <label for="points" class="form-label">Puntos Asociados</label>
-                <input type="number" class="form-control" id="points" v-model.number="currentItem.points" required min="0">
-              </div>
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" @click="closeModal">Cancelar</button>
-              <button type="submit" class="btn btn-primary" :disabled="isSaving">
-                <span v-if="isSaving" class="spinner-border spinner-border-sm me-2"></span>
-                Guardar Nivel
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div v-if="isModalOpen" class="modal-backdrop fade show"></div>
+    <LevelModal
+      v-if="isModalOpen"
+      :item="currentItem"
+      :isSaving="isSaving"
+      :validationErrors="validationErrors"
+      @close="closeModal"
+      @save="saveItem"
+    />
   </div>
 </template>
 
@@ -108,29 +43,24 @@
 import { ref, onMounted } from 'vue';
 import http from '@/http'; 
 import { useAuthStore } from '@/stores/auth'; 
+import LevelTable from '@/components/admin/LevelTable.vue'; 
+import LevelModal from '@/components/admin/LevelModal.vue'; 
 
 const endpoint = '/levels';
 
-// --- ESTADOS DE DATOS ---
 const items = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
 
-// Modal y Formulario
 const isModalOpen = ref(false);
 const currentItem = ref({
     id: null,
     name: '',
-    // Corregido: Usar 'points'
     points: 0, 
 });
 const isSaving = ref(false);
 const isDeleting = ref({});
 const validationErrors = ref({}); 
-
-// ----------------------------------------------------------------------
-// --- FETCHING / LISTADO DE NIVELES ---
-// ----------------------------------------------------------------------
 
 const fetchItems = async () => {
     const authStore = useAuthStore();
@@ -147,16 +77,13 @@ const fetchItems = async () => {
         
         let dataArray = [];
         
-        // ¡LA CORRECCIÓN CLAVE! Extraer del campo 'levels'
         if (response.data && Array.isArray(response.data.levels)) {
             dataArray = response.data.levels;
         } else {
-             // Mantener la verificación por si hay otros formatos, pero 'levels' es la clave
              dataArray = response.data.data || response.data || [];
         }
         
         items.value = dataArray;
-        console.log("Niveles cargados:", items.value.length); // DEBUG
 
     } catch (err) {
         console.error("Error al obtener niveles:", err);
@@ -166,12 +93,7 @@ const fetchItems = async () => {
     }
 };
 
-// ----------------------------------------------------------------------
-// --- MODAL Y FORMULARIO ---
-// ----------------------------------------------------------------------
-
 const resetForm = () => {
-    // Corregido: Usar 'points' en el reset
     currentItem.value = { id: null, name: '', points: 0 };
     validationErrors.value = {};
 };
@@ -186,7 +108,6 @@ const openEditModal = (item) => {
     currentItem.value = { 
         id: item.id,
         name: item.name,
-        // Corregido: Usar item.points
         points: item.points, 
     }; 
     isModalOpen.value = true;
@@ -197,10 +118,6 @@ const closeModal = () => {
     resetForm();
 };
 
-// ----------------------------------------------------------------------
-// --- CRUD: GUARDAR NIVEL (CREATE/UPDATE) ---
-// ----------------------------------------------------------------------
-
 const saveItem = async () => {
     isSaving.value = true;
     validationErrors.value = {};
@@ -209,7 +126,6 @@ const saveItem = async () => {
     try {
         let response;
         
-        // Corregido: Enviar 'points' en el payload
         const data = { 
             name: currentItem.value.name,
             points: currentItem.value.points,
@@ -228,8 +144,11 @@ const saveItem = async () => {
     } catch (err) {
         if (err.response && err.response.status === 422) {
             validationErrors.value = err.response.data.errors || {};
-            document.querySelector('.modal-body').scrollTo(0, 0); 
-
+            
+            const modalBody = document.querySelector('.modal-body');
+            if(modalBody) {
+                modalBody.scrollTo(0, 0); 
+            }
         } else {
             const apiMessage = err.response?.data?.message || 'Error de conexión o servidor.';
             alert(`Error al guardar el nivel: ${apiMessage}`);
@@ -239,23 +158,19 @@ const saveItem = async () => {
     }
 };
 
-// ----------------------------------------------------------------------
-// --- CRUD: ELIMINAR NIVEL ---
-// ----------------------------------------------------------------------
-
 const deleteItem = async (itemId, itemName) => {
     if (!confirm(`¿Estás seguro de eliminar el nivel: "${itemName}" (ID: ${itemId})? Esto podría afectar la experiencia de los jugadores.`)) {
         return;
     }
     
-    isDeleting.value[itemId] = true;
+    isDeleting.value = { ...isDeleting.value, [itemId]: true };
     
     try {
         const response = await http.delete(`${endpoint}/${itemId}`);
         
         alert(response.data.message || `Nivel eliminado con éxito.`);
         
-        await fetchItems(); // Recargar
+        await fetchItems();
 
     } catch (err) {
         console.error("Error al eliminar nivel:", err);
@@ -267,27 +182,11 @@ const deleteItem = async (itemId, itemName) => {
         
         alert(msg);
     } finally {
-        isDeleting.value[itemId] = false;
+        isDeleting.value = { ...isDeleting.value, [itemId]: false };
     }
 };
 
-
-// --- LIFECYCLE HOOKS ---
 onMounted(() => {
     fetchItems(); 
 });
 </script>
-
-<style scoped>
-/* Estilos necesarios para el modal */
-.modal-open {
-    overflow: hidden;
-}
-.modal-open .modal {
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-.modal-backdrop.show {
-    opacity: 0.5;
-}
-</style>

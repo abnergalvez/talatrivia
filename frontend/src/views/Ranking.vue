@@ -80,20 +80,18 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import http from '@/http';
-import { useAuthStore } from '@/stores/auth'; // Importamos el store para identificar al usuario
+import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();
 const generalRankingData = ref(null);
 const isLoading = ref(false);
 const error = ref(null);
 
-// --- LÓGICA DE PROCESAMIENTO DEL RANKING CON EMPATES ---
 const getProcessedRanking = (rawRanking) => {
     if (!rawRanking || rawRanking.length === 0) {
         return [];
     }
     
-    // 1. Clonar y ordenar por total_score descendente.
     const sortedRanking = [...rawRanking].sort((a, b) => b.total_score - a.total_score);
     
     let currentRank = 0;
@@ -103,59 +101,50 @@ const getProcessedRanking = (rawRanking) => {
         const score = entry.total_score;
         
         if (score !== lastScore) {
-            // Si el score cambia, el rank es el índice actual + 1
             currentRank = index + 1;
             lastScore = score;
-        } else {
-            // Si el score es el mismo, se mantiene el rank anterior (manejo de empate)
-            // currentRank ya contiene el rank correcto.
-        }
+        } 
         
         return {
             ...entry,
-            displayRank: currentRank, // Rank calculado para mostrar
+            displayRank: currentRank,
         };
     });
 };
 
-// --- COMPUTED PROPERTY para la tabla ---
 const processedRanking = computed(() => {
     return generalRankingData.value ? getProcessedRanking(generalRankingData.value.ranking) : [];
 });
 
 
-// --- FETCHING DE DATOS ---
 const fetchGeneralRanking = async () => {
-  isLoading.value = true;
-  error.value = null;
-  try {
-    // Endpoint: /api/all_trivias_ranking
-    const response = await http.get('/all_trivias_ranking');
+  isLoading.value = true;
+  error.value = null;
+  try {
+    const response = await http.get('/all_trivias_ranking');
     
     if (response.data) {
-        // Almacenamos toda la data de la respuesta, incluyendo los stats del usuario
         generalRankingData.value = response.data;
     } else {
         throw new Error("Respuesta de API inválida.");
     }
     
-  } catch (err) {
-    console.error("Error al obtener ranking:", err);
-    error.value = 'No se pudo cargar el ranking general.';
-  } finally {
-    isLoading.value = false;
-  }
+  } catch (err) {
+    console.error("Error al obtener ranking:", err);
+    error.value = 'No se pudo cargar el ranking general.';
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 onMounted(fetchGeneralRanking);
 </script>
 
 <style scoped>
-/* Estilos adicionales de Bootstrap para el componente */
 .ranking-table th {
     font-weight: bold;
 }
 .ranking-table tbody tr.table-success {
-    border: 2px solid #198754; /* Borde más notorio para tu propia fila */
+    border: 2px solid #198754;
 }
 </style>
