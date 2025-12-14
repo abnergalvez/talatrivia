@@ -11,8 +11,19 @@ WORKDIR /var/www/html
 COPY . .
 
 RUN composer install
-RUN mkdir -p database && touch database/database.sqlite
+
+# Crear directorio para la BD (no versionado)
+RUN mkdir -p storage/database
+
+# Script simple de inicialización
+RUN echo '#!/bin/bash\n\
+if [ ! -f storage/database/database.sqlite ]; then\n\
+    touch storage/database/database.sqlite\n\
+fi\n\
+php artisan migrate:fresh --seed --force\n\
+php -S 0.0.0.0:8082 -t public' > /usr/local/bin/start.sh \
+    && chmod +x /usr/local/bin/start.sh
 
 EXPOSE 8082
 
-CMD ["php", "-S", "0.0.0.0:8082", "-t", "public"]
+CMD ["/usr/local/bin/start.sh"]

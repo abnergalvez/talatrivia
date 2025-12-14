@@ -60,6 +60,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('database');
 
 /*
 |--------------------------------------------------------------------------
@@ -72,9 +73,9 @@ $app->configure('app');
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    \App\Http\Middleware\CorsMiddleware::class,
+]);
 
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
@@ -110,11 +111,19 @@ $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
+    require __DIR__.'/../routes/api.php';
 });
 
 $app->withFacades();
 $app->withEloquent();
-$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(\Anik\Form\FormRequestServiceProvider::class);
+$app->register(\Laravel\Lumen\Console\ConsoleServiceProvider::class);
+
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\AuthMiddleware::class,
+    'role' => App\Http\Middleware\RoleMiddleware::class,
+]);
 
 return $app;

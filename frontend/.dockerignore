@@ -1,0 +1,4 @@
+node_modules
+dist
+.DS_Store
+# Añade cualquier otro archivo o carpeta que no deba copiarse

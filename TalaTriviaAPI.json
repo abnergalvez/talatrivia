@@ -1,0 +1,1122 @@
+{
+	"info": {
+		"_postman_id": "db93c8ed-cdcc-4c7e-baa9-316796f9f6e9",
+		"name": "TalaTrivia - API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "4127224"
+	},
+	"item": [
+		{
+			"name": "Auth Routes",
+			"item": [
+				{
+					"name": "[Auth]  Login (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@trivia.com\",\r\n    \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/login"
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth] Login (Player)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"player1@trivia.com\",\r\n    \"password\": \"player123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/login"
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth] Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "NTscvx6xBbNhRq26DMMAYG6Q3wR9tNvBV0KkLa7P8UDqkUqfpYzk8fqMFjhH"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"url": "http://localhost:8082/api/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth] Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"name\": \"Player3 User\",\r\n        \"email\": \"player3@trivia.com\",\r\n        \"password\": \"player123\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/register"
+					},
+					"response": []
+				},
+				{
+					"name": "[Auth] Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "q1LVdWcYoryZ42miKbJKwNsiLBCZ3FfPEPNLkyfnEjBzp4Ztz7b12KB4kxhZ"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/me"
+					},
+					"response": []
+				}
+			],
+			"description": "**Auth Routes Folder with API Endpoints**\n\nFor the \"**Login**\" and \"**Me**\" endpoints, **implement/require** a **Bearer Token** for the authenticated/logged-in user."
+		},
+		{
+			"name": "User Routes (only 'Admin')",
+			"item": [
+				{
+					"name": "[User] List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/users"
+					},
+					"response": []
+				},
+				{
+					"name": "[User] Show user id=1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/users/1"
+					},
+					"response": []
+				},
+				{
+					"name": "[User] Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"name\": \"Player4 User\",\r\n        \"email\": \"player4@trivia.com\",\r\n        \"password\": \"player123\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/users/"
+					},
+					"response": []
+				},
+				{
+					"name": "[User] Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"name\": \"Player One edited\",\r\n        \"email\": \"player1@trivia.com\",\r\n        \"password\": \"player123\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/users/2"
+					},
+					"response": []
+				},
+				{
+					"name": "[User] Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/users/5"
+					},
+					"response": []
+				}
+			],
+			"description": "**User Routes Folder with API Endpoints (CRUD)**\n\nFor all endpoints on this model, **implement/require** a **Bearer Token** for the authenticated/logged-in user."
+		},
+		{
+			"name": "Role Routes (only 'Admin')",
+			"item": [
+				{
+					"name": "[Role] List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/roles"
+					},
+					"response": []
+				},
+				{
+					"name": "[Role] Show role id=1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/roles/1"
+					},
+					"response": []
+				},
+				{
+					"name": "[Role] Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"moderator\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/roles/"
+					},
+					"response": []
+				},
+				{
+					"name": "[Role] Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"name\": \"moderator_edited\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/roles/3"
+					},
+					"response": []
+				},
+				{
+					"name": "[Role] Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/roles/3"
+					},
+					"response": []
+				}
+			],
+			"description": "**Role Routes Folder with API Endpoints (CRUD)**\n\nFor all endpoints on this model, **implement/require** a **Bearer Token** for the authenticated/logged-in user."
+		},
+		{
+			"name": "Level Routes (only 'Admin')",
+			"item": [
+				{
+					"name": "[Level] List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/levels"
+					},
+					"response": []
+				},
+				{
+					"name": "[Level] Show level id=1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/levels/1"
+					},
+					"response": []
+				},
+				{
+					"name": "[Level] Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Hardcore\",\r\n    \"points\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/levels/"
+					},
+					"response": []
+				},
+				{
+					"name": "[Level] Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"name\": \"Hardcore_edited\",\r\n        \"points\": 5\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/levels/4"
+					},
+					"response": []
+				},
+				{
+					"name": "[Level] Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/levels/3"
+					},
+					"response": []
+				}
+			],
+			"description": "**Level Routes Folder with API Endpoints (CRUD)**\n\nFor all endpoints on this model, **implement/require** a **Bearer Token** for the authenticated/logged-in user."
+		},
+		{
+			"name": "Trivia Routes (only 'Admin')",
+			"item": [
+				{
+					"name": "[Trivia] List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/trivias"
+					},
+					"response": []
+				},
+				{
+					"name": "[Trivia] Show trivia id=1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/trivias/1"
+					},
+					"response": []
+				},
+				{
+					"name": "[Trivia] Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Trivia de Ciencias\",\r\n    \"description\": \"Preguntas de física y química\",\r\n    \"is_active\": true,\r\n    \"questions_order\": \"sequential\",\r\n    \"time_option\": \"by_question\",\r\n    \"time\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/trivias/"
+					},
+					"response": []
+				},
+				{
+					"name": "[Trivia] Assing users to trivia id=2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_ids\": [2, 3, 4]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/trivias/2/assign",
+						"description": "Data input (posible) example:\n\n{  \n\"user_ids\": \\[2, 3, 4\\]  \n}\n\nOR\n\n{\n\n\"emails\": \\[  \n\"player1@trivia.com\",  \n\"player2@trivia.com\",  \n\"player5@trivia.com\"  \n\\]  \n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[Trivia] Unassign users to trivia id=2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_ids\": [2, 3, 4]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/trivias/2/unassign",
+						"description": "Data input (posible) example:\n\n{  \n\"user_ids\": \\[2, 3, 4\\]  \n}\n\nOR\n\n{\n\n\"emails\": \\[  \n\"player1@trivia.com\",  \n\"player2@trivia.com\",  \n\"player5@trivia.com\"  \n\\]  \n}"
+					},
+					"response": []
+				},
+				{
+					"name": "[Trivias] Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Trivia de Historia Mundial - Actualizada\",\r\n    \"is_active\": false,\r\n    \"questions_order\": \"random\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/trivias/3"
+					},
+					"response": []
+				},
+				{
+					"name": "[Trivia] Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/trivias/3"
+					},
+					"response": []
+				},
+				{
+					"name": "[Trivia] List users assigned trivia id=1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8082/api/trivias/1/users"
+					},
+					"response": []
+				}
+			],
+			"description": "**Trivia Routes Folder with API Endpoints (CRUD)**\n\nFor all endpoints on this model, **implement/require** a **Bearer Token** for the authenticated/logged-in user."
+		},
+		{
+			"name": "Question Routes (only 'Admin')",
+			"item": [
+				{
+					"name": "[Question] List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/trivias/1/questions"
+					},
+					"response": []
+				},
+				{
+					"name": "[Question] Show question id=1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/questions/1"
+					},
+					"response": []
+				},
+				{
+					"name": "[Question] Store (just one )",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"level_id\": 2,\r\n    \"description\": \"¿Cuál es la capital de Francia?\",\r\n    \"time\": 20,\r\n    \"options\": [\r\n        {\r\n            \"text\": \"París\",\r\n            \"is_correct\": true\r\n        },\r\n        {\r\n            \"text\": \"Londres\",\r\n            \"is_correct\": false\r\n        },\r\n        {\r\n            \"text\": \"Madrid\",\r\n            \"is_correct\": false\r\n        },\r\n        {\r\n            \"text\": \"Roma\",\r\n            \"is_correct\": false\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/trivias/2/questions"
+					},
+					"response": []
+				},
+				{
+					"name": "[Question] Store Bulk (many )",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"description\": \"¿Qué proceso forma parte del ciclo de vida del empleado?\",\r\n        \"level_id\": 1,\r\n        \"time\": 25,\r\n        \"options\": [\r\n            { \"text\": \"Reclutamiento y selección\", \"is_correct\": true },\r\n            { \"text\": \"Control de inventarios\", \"is_correct\": false },\r\n            { \"text\": \"Monitoreo de redes\", \"is_correct\": false }\r\n        ]\r\n    },\r\n    {\r\n        \"description\": \"¿Qué documento formaliza la relación laboral entre el trabajador y la empresa?\",\r\n        \"level_id\": 1,\r\n        \"time\": 20,\r\n        \"options\": [\r\n            { \"text\": \"Contrato de trabajo\", \"is_correct\": true },\r\n            { \"text\": \"Orden de compra\", \"is_correct\": false },\r\n            { \"text\": \"Acta de inspección\", \"is_correct\": false }\r\n        ]\r\n    },\r\n    {\r\n        \"description\": \"¿Cuál es un indicador clave para medir la gestión de RRHH?\",\r\n        \"level_id\": 2,\r\n        \"time\": 30,\r\n        \"options\": [\r\n            { \"text\": \"Tasa de rotación de personal\", \"is_correct\": true },\r\n            { \"text\": \"Costo por unidad producida\", \"is_correct\": false },\r\n            { \"text\": \"Velocidad de respuesta al cliente\", \"is_correct\": false }\r\n        ]\r\n    },\r\n    {\r\n        \"description\": \"¿Qué práctica está orientada a mejorar el clima laboral?\",\r\n        \"level_id\": 2,\r\n        \"time\": 25,\r\n        \"options\": [\r\n            { \"text\": \"Programas de bienestar laboral\", \"is_correct\": true },\r\n            { \"text\": \"Incrementar las metas sin apoyo\", \"is_correct\": false },\r\n            { \"text\": \"Reducir los descansos de los empleados\", \"is_correct\": false }\r\n        ]\r\n    },\r\n    {\r\n        \"description\": \"¿Qué actividad pertenece a la evaluación del desempeño?\",\r\n        \"level_id\": 3,\r\n        \"time\": 30,\r\n        \"options\": [\r\n            { \"text\": \"Medición de resultados del empleado\", \"is_correct\": true },\r\n            { \"text\": \"Auditoría de activos materiales\", \"is_correct\": false },\r\n            { \"text\": \"Revisión del presupuesto anual\", \"is_correct\": false }\r\n        ]\r\n    }\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/trivias/2/questions_bulk"
+					},
+					"response": []
+				},
+				{
+					"name": "[Question] Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"¿Cuál de las siguientes opciones corresponde a una función básica del área de Recursos Humanos?\",\r\n    \"time\": 25,\r\n    \"options\": [\r\n        {\r\n            \"text\": \"Gestión del talento y selección de personal\",\r\n            \"is_correct\": true\r\n        },\r\n        {\r\n            \"text\": \"Control de inventario de materias primas\",\r\n            \"is_correct\": false\r\n        },\r\n        {\r\n            \"text\": \"Mantenimiento preventivo de equipos industriales\",\r\n            \"is_correct\": false\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/questions/6"
+					},
+					"response": []
+				},
+				{
+					"name": "[Question] Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1dpC6t6kKISxFEIbhyryONlxeY8isj1hHCTQjz7bj4pmTWeUlikGSVUHZSf0"
+							}
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/questions/6"
+					},
+					"response": []
+				}
+			],
+			"description": "**Question Routes Folder with API Endpoints (CRUD)**\n\nFor all endpoints on this model, **implement/require** a **Bearer Token** for the authenticated/logged-in user."
+		},
+		{
+			"name": "Game Play Routes (all users)",
+			"item": [
+				{
+					"name": "[Game Play] Assigned_trivias",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1gUKNX6PgSUtMzgMkecLjMJDYhCKFPfijmSLdoTiZgmXlLtQEkrouC0eTGkO"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/assigned_trivias"
+					},
+					"response": []
+				},
+				{
+					"name": "[Game Play] Start Game",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1gUKNX6PgSUtMzgMkecLjMJDYhCKFPfijmSLdoTiZgmXlLtQEkrouC0eTGkO"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/trivias/2/get_full"
+					},
+					"response": []
+				},
+				{
+					"name": "[Game Play] answer one question",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1gUKNX6PgSUtMzgMkecLjMJDYhCKFPfijmSLdoTiZgmXlLtQEkrouC0eTGkO"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"option_id\": 12\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/questions/4/answer"
+					},
+					"response": []
+				},
+				{
+					"name": "[Game Play] answer all questions (bulk)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1gUKNX6PgSUtMzgMkecLjMJDYhCKFPfijmSLdoTiZgmXlLtQEkrouC0eTGkO"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"answers\": [\r\n        {\r\n            \"question_id\": 8,\r\n            \"option_id\": 27\r\n        },\r\n        {\r\n            \"question_id\": 5,\r\n            \"option_id\": 14\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8082/api/trivias/2/answer_all"
+					},
+					"response": []
+				},
+				{
+					"name": "[Game Play] View My Answers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1gUKNX6PgSUtMzgMkecLjMJDYhCKFPfijmSLdoTiZgmXlLtQEkrouC0eTGkO"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/trivias/2/my_answers"
+					},
+					"response": []
+				},
+				{
+					"name": "[Game Play] Ranking by trivia",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1gUKNX6PgSUtMzgMkecLjMJDYhCKFPfijmSLdoTiZgmXlLtQEkrouC0eTGkO"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/trivias/2/ranking"
+					},
+					"response": []
+				},
+				{
+					"name": "[Game Play] General Ranking",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "1gUKNX6PgSUtMzgMkecLjMJDYhCKFPfijmSLdoTiZgmXlLtQEkrouC0eTGkO"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "http://localhost:8082/api/all_trivias_ranking"
+					},
+					"response": []
+				}
+			],
+			"description": "**All game play API Endpoints routes**\n\nFor all endpoints , **implement/require** a **Bearer Token** for the authenticated/logged-in user. (any user)"
+		}
+	]
+}
