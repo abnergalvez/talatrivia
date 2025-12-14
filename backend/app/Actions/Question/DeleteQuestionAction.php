@@ -18,7 +18,6 @@ class DeleteQuestionAction
 
         $question = Question::with(['options'])->findOrFail($id);
 
-        // Verificar si hay respuestas asociadas a esta pregunta
         $hasAnswers = $question->answers()->exists();
 
         if ($hasAnswers) {
@@ -31,12 +30,8 @@ class DeleteQuestionAction
         $questionDescription = substr($question->description, 0, 50) . '...';
         $optionsCount = $question->options->count();
 
-        // Borrado en cascada
         DB::transaction(function () use ($question) {
-            // Eliminar opciones asociadas
             $question->options()->delete();
-            
-            // Eliminar la pregunta
             $question->delete();
         });
 

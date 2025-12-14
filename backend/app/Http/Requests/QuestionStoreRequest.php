@@ -17,8 +17,6 @@ class QuestionStoreRequest extends FormRequest
             'level_id' => 'required|exists:levels,id',
             'description' => 'required|string|min:10|max:1000',
             'time' => 'nullable|integer|min:1|max:3600',
-            
-            // Validación de opciones
             'options' => 'required|array|min:2|max:6',
             'options.*.text' => 'required|string|min:1|max:500',
             'options.*.is_correct' => 'required|boolean',
@@ -39,7 +37,6 @@ class QuestionStoreRequest extends FormRequest
             'time.min' => 'The time must be at least :min second.',
             'time.max' => 'The time must not exceed :max seconds (1 hour).',
             
-            // Mensajes para opciones
             'options.required' => 'At least 2 options are required.',
             'options.array' => 'Options must be an array.',
             'options.min' => 'At least :min options are required.',

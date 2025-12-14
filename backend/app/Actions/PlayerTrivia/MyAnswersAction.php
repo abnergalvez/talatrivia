@@ -16,10 +16,8 @@ class MyAnswersAction
             throw new BusinessRuleException("User not authenticated.", 401);
         }
 
-        // Verificar que la trivia existe
         $trivia = Trivia::findOrFail($triviaId);
 
-        // Verificar que el usuario tiene asignada esta trivia
         $assignment = $userAuth->trivias()
             ->where('trivia_id', $triviaId)
             ->first();
@@ -28,7 +26,6 @@ class MyAnswersAction
             throw new BusinessRuleException("You do not have access to this trivia.", 403);
         }
 
-        // Obtener las respuestas del usuario para esta trivia
         $answers = Answer::where('user_id', $userAuth->id)
             ->where('trivia_id', $triviaId)
             ->with([
@@ -61,7 +58,6 @@ class MyAnswersAction
                 ];
             });
 
-        // Calcular estadísticas
         $totalQuestions = $trivia->questions()->count();
         $answeredQuestions = $answers->count();
         $correctAnswers = $answers->where('is_correct', true)->count();

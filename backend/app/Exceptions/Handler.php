@@ -16,7 +16,7 @@ class Handler extends ExceptionHandler
 {
     public function render($request, Throwable $e)
     {
-        // 1. Validación (422)
+        // Validación
         if ($e instanceof ValidationException) {
             return response()->json([
                 'error' => 'Validation failed',
@@ -24,17 +24,17 @@ class Handler extends ExceptionHandler
             ], 422);
         }
 
-        // 2. Modelo no encontrado (404)
+        // Modelo no encontrado
         if ($e instanceof ModelNotFoundException || $e instanceof NotFoundHttpException) {
             return response()->json(['error' => 'Resource not found'], 404);
         }
 
-        // 3. Error de autenticación (401)
+        // Error de autenticación
         if ($e instanceof AuthenticationException) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // 4. Error en base de datos (sobre QueryException)
+        // Error en base de datos
         if ($e instanceof QueryException) {
             return response()->json([
                 'error' => 'Database error',
@@ -42,7 +42,7 @@ class Handler extends ExceptionHandler
             ], 500);
         }
 
-        // 5. Excepciones personalizadas (tu propias reglas)
+        // Excepciones personalizadas
         if ($e instanceof BusinessRuleException ||
             $e instanceof DomainException ||
             $e instanceof AuthorizationException) {
@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
             ], $e->getCode() ?: 400);
         }
 
-        // 6. Errores desconocidos (500)
+        // Errores desconocidos (500)
         return response()->json([
             'error' => 'Internal Server Error',
             'message' => env('APP_DEBUG') ? $e->getMessage() : null

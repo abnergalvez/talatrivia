@@ -14,7 +14,6 @@ class AssignedTriviasAction
             throw new BusinessRuleException("User not authenticated.", 401);
         }
 
-        // Obtener trivias asignadas al usuario con información de pivot
         $trivias = $userAuth->trivias()
             ->withCount('questions')
             ->get()

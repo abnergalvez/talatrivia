@@ -16,10 +16,8 @@ class GetFullTriviaAction
             throw new BusinessRuleException("User not authenticated.", 401);
         }
 
-        // Verificar que la trivia existe
         $trivia = Trivia::findOrFail($triviaId);
 
-        // Verificar que el usuario tiene asignada esta trivia
         $assignment = $userAuth->trivias()
             ->where('trivia_id', $triviaId)
             ->first();
@@ -28,31 +26,25 @@ class GetFullTriviaAction
             throw new BusinessRuleException("You do not have access to this trivia.", 403);
         }
 
-        // Verificar si la trivia está activa
         if (!$trivia->is_active) {
             throw new BusinessRuleException("This trivia is currently inactive and cannot be accessed.", 403);
         }
 
-        // Verificar si el usuario ya completó la trivia
         if ($assignment->pivot->completed_at) {
             throw new BusinessRuleException("You have already completed this trivia.", 422);
         }
 
-        // Obtener IDs de preguntas ya respondidas por el usuario
         $answeredQuestionIds = Answer::where('user_id', $userAuth->id)
             ->where('trivia_id', $triviaId)
             ->pluck('question_id')
             ->toArray();
 
-        // Obtener preguntas de la trivia
         $questionsQuery = $trivia->questions()
             ->with(['level', 'options' => function ($query) {
-                // No mostrar is_correct al usuario
                 $query->select('id', 'question_id', 'text');
             }])
-            ->whereNotIn('id', $answeredQuestionIds); // Solo preguntas no respondidas
+            ->whereNotIn('id', $answeredQuestionIds); 
 
-        // Aplicar ordenamiento según configuración
         if ($trivia->questions_order === 'random') {
             $questionsQuery->inRandomOrder();
         } else {

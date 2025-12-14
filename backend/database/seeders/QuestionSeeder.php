@@ -20,7 +20,6 @@ class QuestionSeeder extends Seeder
         $leadership = DB::table('trivia')->where('name', 'Liderazgo y Gestión del Talento')->first()->id;
 
         DB::table('questions')->insert([
-            // Trivia 1 (RRHH básico)
             [
                 'trivia_id' => $intro,
                 'level_id' => $easy,
@@ -46,7 +45,6 @@ class QuestionSeeder extends Seeder
                 'updated_at' => Carbon::now()
             ],
 
-            // Trivia 2 (liderazgo)
             [
                 'trivia_id' => $leadership,
                 'level_id' => $easy,

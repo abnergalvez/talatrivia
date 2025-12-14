@@ -20,10 +20,8 @@ class AnswerAllQuestionsAction
             throw new BusinessRuleException("User not authenticated.", 401);
         }
 
-        // Verificar que la trivia existe
         $trivia = Trivia::with('questions.level')->findOrFail($triviaId);
 
-        // Verificar que el usuario tiene asignada esta trivia
         $assignment = $userAuth->trivias()
             ->where('trivia_id', $triviaId)
             ->first();
@@ -32,23 +30,19 @@ class AnswerAllQuestionsAction
             throw new BusinessRuleException("You do not have access to this trivia.", 403);
         }
 
-        // Verificar si la trivia está activa
         if (!$trivia->is_active) {
             throw new BusinessRuleException("This trivia is currently inactive.", 403);
         }
 
-        // Verificar si el usuario ya completó la trivia
         if ($assignment->pivot->completed_at) {
             throw new BusinessRuleException("You have already completed this trivia.", 422);
         }
 
-        // Obtener preguntas ya respondidas
         $answeredQuestionIds = Answer::where('user_id', $userAuth->id)
             ->where('trivia_id', $triviaId)
             ->pluck('question_id')
             ->toArray();
 
-        // Validar que todas las preguntas en answers pertenecen a esta trivia
         $triviaQuestionIds = $trivia->questions->pluck('id')->toArray();
         
         foreach ($data['answers'] as $answer) {
@@ -59,7 +53,6 @@ class AnswerAllQuestionsAction
                 );
             }
 
-            // Validar que no haya sido respondida previamente
             if (in_array($answer['question_id'], $answeredQuestionIds)) {
                 throw new BusinessRuleException(
                     "Question ID {$answer['question_id']} has already been answered.", 
@@ -68,13 +61,11 @@ class AnswerAllQuestionsAction
             }
         }
 
-        // Validar que no haya preguntas duplicadas en el request
         $questionIds = collect($data['answers'])->pluck('question_id')->toArray();
         if (count($questionIds) !== count(array_unique($questionIds))) {
             throw new BusinessRuleException("Duplicate questions found in your answers.", 422);
         }
 
-        // Procesar respuestas en transacción
         $result = DB::transaction(function () use ($userAuth, $trivia, $data, $assignment, $answeredQuestionIds) {
             $totalPointsEarned = 0;
             $correctAnswers = 0;
@@ -85,7 +76,6 @@ class AnswerAllQuestionsAction
                     ->where('id', $answerData['question_id'])
                     ->first();
 
-                // Verificar que la opción pertenece a la pregunta
                 $option = Option::where('id', $answerData['option_id'])
                     ->where('question_id', $answerData['question_id'])
                     ->first();
@@ -97,7 +87,6 @@ class AnswerAllQuestionsAction
                     );
                 }
 
-                // Crear la respuesta
                 Answer::create([
                     'user_id' => $userAuth->id,
                     'trivia_id' => $trivia->id,
@@ -105,7 +94,6 @@ class AnswerAllQuestionsAction
                     'option_id' => $option->id,
                 ]);
 
-                // Calcular puntos
                 $pointsEarned = $option->is_correct ? $question->level->points : 0;
                 $totalPointsEarned += $pointsEarned;
 
@@ -121,11 +109,9 @@ class AnswerAllQuestionsAction
                 ];
             }
 
-            // Actualizar score acumulado
             $currentScore = $assignment->pivot->score ?? 0;
             $newScore = $currentScore + $totalPointsEarned;
 
-            // Verificar si completó todas las preguntas
             $totalQuestions = $trivia->questions()->count();
             $totalAnsweredQuestions = count($answeredQuestionIds) + count($data['answers']);
 
@@ -134,7 +120,6 @@ class AnswerAllQuestionsAction
                 $completedAt = Carbon::now();
             }
 
-            // Actualizar pivot
             $userAuth->trivias()->updateExistingPivot($trivia->id, [
                 'score' => $newScore,
                 'completed_at' => $completedAt

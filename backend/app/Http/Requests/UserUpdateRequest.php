@@ -13,7 +13,6 @@ class UserUpdateRequest extends FormRequest
 
     protected function rules(): array
     {
-        // Obtener el ID del usuario desde la ruta
         $userId = $this->route('id');
 
         return [

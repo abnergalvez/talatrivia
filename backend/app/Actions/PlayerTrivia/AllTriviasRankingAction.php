@@ -16,14 +16,12 @@ class AllTriviasRankingAction
             throw new BusinessRuleException("User not authenticated.", 401);
         }
 
-        // 1. Obtener TODOS los usuarios asignados a alguna trivia
         $assignedUsers = DB::table('trivia_user')
             ->join('users', 'trivia_user.user_id', '=', 'users.id')
             ->select('users.id', 'users.name', 'users.email')
             ->distinct()
             ->get();
 
-        // 2. Trivias asignadas por usuario
         $assignedTrivias = DB::table('trivia_user')
             ->select('user_id', DB::raw('GROUP_CONCAT(trivia_id) as assigned'))
             ->groupBy('user_id')
@@ -36,7 +34,6 @@ class AllTriviasRankingAction
                 ];
             });
 
-        // 3. Datos de trivias completadas
         $completedData = DB::table('trivia_user')
             ->select(
                 'users.id',
@@ -61,7 +58,6 @@ class AllTriviasRankingAction
                 ];
             });
 
-        // 4. Construir ranking incluyendo trivias restantes
         $fullRanking = $assignedUsers->map(function ($user) use ($assignedTrivias, $completedData) {
 
             $assigned = $assignedTrivias[$user->id] ?? [];
@@ -86,7 +82,6 @@ class AllTriviasRankingAction
                 ];
             }
 
-            // Usuario sin ninguna trivia completada
             return [
                 'position' => null,
                 'user' => [
@@ -101,23 +96,18 @@ class AllTriviasRankingAction
             ];
         });
 
-        // 5. Ordenar ranking correctamente (UNA sola operación)
         $sorted = $fullRanking->sort(function ($a, $b) {
 
-            // Primero: usuarios con trivias completadas van arriba
             if ($a['trivias_completed'] > 0 && $b['trivias_completed'] === 0) return -1;
             if ($b['trivias_completed'] > 0 && $a['trivias_completed'] === 0) return 1;
 
-            // Segundo: ordenar por score descendente
             if ($a['total_score'] !== $b['total_score']) {
                 return $b['total_score'] <=> $a['total_score'];
             }
 
-            // Tercero: ordenar por cantidad de trivias completadas
             return $b['trivias_completed'] <=> $a['trivias_completed'];
         })->values();
 
-        // 6. Asignar posiciones solo a los que completaron algo
         $pos = 1;
 
         $sorted = $sorted->map(function ($row) use (&$pos) {
@@ -127,7 +117,6 @@ class AllTriviasRankingAction
             return $row;
         });
 
-        // 7. Información del usuario autenticado
         $userRow = $sorted->firstWhere('user.id', $userAuth->id);
 
         return response()->json([

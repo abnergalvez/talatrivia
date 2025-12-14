@@ -18,7 +18,6 @@ class DeleteTriviaAction
 
         $trivia = Trivia::with(['questions', 'users'])->findOrFail($id);
 
-        // Verificar si hay respuestas asociadas a las preguntas de esta trivia
         $hasAnswers = DB::table('answers')
             ->whereIn('question_id', $trivia->questions->pluck('id'))
             ->exists();
@@ -31,18 +30,14 @@ class DeleteTriviaAction
         $usersCount = $trivia->users->count();
         $questionsCount = $trivia->questions->count();
 
-        // Borrado en cascada
         DB::transaction(function () use ($trivia) {
-            // Eliminar relaciones con usuarios (tabla intermedia trivia_user)
             $trivia->users()->detach();
             
-            // Eliminar preguntas asociadas y sus opciones (si tiene cascade en BD)
             foreach ($trivia->questions as $question) {
-                $question->options()->delete(); // Eliminar opciones de cada pregunta
-                $question->delete(); // Eliminar pregunta
+                $question->options()->delete(); 
+                $question->delete();
             }
             
-            // Eliminar la trivia
             $trivia->delete();
         });
 

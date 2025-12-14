@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-//Requests
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\UserStoreRequest;
-
-//Actions
 use App\Actions\User\UpdateUserAction;
 use App\Actions\User\ShowUserAction;
 use App\Actions\User\ListUsersAction;

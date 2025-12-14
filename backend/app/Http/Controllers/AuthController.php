@@ -32,7 +32,7 @@ class AuthController extends Controller
         $user->load('role');
         return response()->json([
             'message' => 'You have successfully registered.',
-            'user' => [ // <-- Devolver un objeto 'user' limpio con el rol
+            'user' => [ 
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,

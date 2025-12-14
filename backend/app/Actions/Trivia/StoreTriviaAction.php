@@ -15,7 +15,6 @@ class StoreTriviaAction
             throw new BusinessRuleException("Only admin users can perform this action.", 403);
         }
 
-        // Establecer valores por defecto si no vienen
         $data['is_active'] = $data['is_active'] ?? true;
 
         $trivia = Trivia::create($data);

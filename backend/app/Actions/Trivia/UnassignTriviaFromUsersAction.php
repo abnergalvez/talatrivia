@@ -18,7 +18,6 @@ class UnassignTriviaFromUsersAction
 
         $trivia = Trivia::findOrFail($triviaId);
 
-        // Obtener IDs de usuarios por IDs directos o por email
         $userIds = isset($data['user_ids']) && !empty($data['user_ids'])
             ? $data['user_ids']
             : User::whereIn('email', $data['emails'] ?? [])->pluck('id')->toArray();
@@ -27,7 +26,7 @@ class UnassignTriviaFromUsersAction
             throw new BusinessRuleException("No valid users found to unassign.", 422);
         }
 
-        // 🚫 NUEVO: detectar usuarios con respuestas en esta trivia
+        // detecta usuarios con respuestas en la trivia
         $usersWithAnswers = User::whereIn('id', $userIds)
             ->whereHas('answers', function ($q) use ($triviaId) {
                 $q->where('trivia_id', $triviaId);
@@ -42,14 +41,12 @@ class UnassignTriviaFromUsersAction
             throw new BusinessRuleException("Some users cannot be unassigned because they already answered this trivia.", 422);
         }
 
-        // Filtrar usuarios válidos (sin respuestas)
         $userIdsToUnassign = array_diff($userIds, $usersWithAnswers);
 
         if (empty($userIdsToUnassign)) {
             throw new BusinessRuleException("No users can be unassigned from this trivia.", 422);
         }
 
-        // Desasignar usuarios permitidos
         $trivia->users()->detach($userIdsToUnassign);
 
         $unassignedUsers = User::whereIn('id', $userIdsToUnassign)

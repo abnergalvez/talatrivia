@@ -25,7 +25,6 @@ class AuthMiddleware
             return response()->json(['error' => 'Invalid token'], 401);
         }
 
-        // Adjuntar usuario autenticado
         app()->instance('user', $user);
 
         return $next($request);

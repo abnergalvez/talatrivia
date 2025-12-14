@@ -27,7 +27,6 @@ class UpdateUserAction
             }
         }
 
-        // Hashear password si existe
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }

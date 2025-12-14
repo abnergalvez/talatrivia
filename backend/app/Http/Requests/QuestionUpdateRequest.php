@@ -17,8 +17,6 @@ class QuestionUpdateRequest extends FormRequest
             'level_id' => 'sometimes|required|exists:levels,id',
             'description' => 'sometimes|required|string|min:10|max:1000',
             'time' => 'sometimes|nullable|integer|min:1|max:3600',
-            
-            // Validación de opciones (opcional en update)
             'options' => 'sometimes|array|min:2|max:6',
             'options.*.text' => 'required|string|min:1|max:500',
             'options.*.is_correct' => 'required|boolean',
@@ -39,7 +37,6 @@ class QuestionUpdateRequest extends FormRequest
             'time.min' => 'The time must be at least :min second.',
             'time.max' => 'The time must not exceed :max seconds (1 hour).',
             
-            // Mensajes para opciones
             'options.array' => 'Options must be an array.',
             'options.min' => 'At least :min options are required.',
             'options.max' => 'A maximum of :max options are allowed.',
